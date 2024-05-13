@@ -1,5 +1,3 @@
-## A spatial analysis of distance to the nearest greenspace and dimensions of deprivation by Output Area within the Bradford local authority district
-
 The full study can be found [here](access-to-greenspace-bradford.html).
 
 ______________________________
