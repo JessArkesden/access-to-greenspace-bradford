@@ -1,0 +1,9 @@
+# _config.yml
+
+# Site settings
+title: Access to greenspace in Bradford
+description: Using a GWR model to analyse the relationship between greenspace and deprivation in Bradford
+theme: jekyll-theme-cayman # Change this to the name of the theme you want to use
+
+# Build settings
+markdown: kramdown
