@@ -1,4 +1,4 @@
-### The full study can be found [here](access-to-greenspace-bradford.html).
+**The full study can be found [here](access-to-greenspace-bradford.html).**
 ______________________________
 
 ### Summary
