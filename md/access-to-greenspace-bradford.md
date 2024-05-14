@@ -1,61 +1,32 @@
-<div style="color: #2F5496; text-decoration: underline; font-size: 24px; text-align: center; line-height: 1.5; font-weight: bold;">
-    A spatial analysis of distance to the nearest greenspace and dimensions of deprivation by Output Area within the Bradford local authority district
-</div>
+# A spatial analysis of distance to the nearest greenspace and dimensions of deprivation by Output Area within the Bradford local authority district
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    1. Introduction
-</div>
+## 1. Introduction
 
 Greenspace is an important part of urban life, with benefits for humans and the environment. Analysing Bradford local authority district (LAD), this study builds on the growing literature addressing the challenge of greenspace accessibility by focusing on each deprivation dimension. Results show that considering deprivation and the relationship with greenspace in this greater level of detail is important for future policy and development.
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    2. Background
-</div>
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    2.1. Why is greenspace important?
-</div>
-
+## 2. Background
+### 2.1. Why is greenspace important?
 Natural England (2023) estimates benefits of £6.6 billion in health, climate, and environmental gains from greenspace. However, a third of people do not have access to quality greenspace within a 15-minute walk of their home (Natural England, 2023). Public policy highlights commitments to improve this, with the Green Infrastructure Framework seeking to determine where greenspace is needed (Natural England, 2023).
 
-<br>
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    2.2. Why Bradford?
-</div>
-
+### 2.2. Why Bradford?
 Bradford is the fifth largest district in England (CBMDC, 2021) and has a young population, ranking 4th for children aged 14 or less (21.4%) (CBMDC, 2022). Bradford is diverse – a third of people identify as Muslim, nearly 20% were born outside the UK, and 39% are Black, Asian, Mixed, or “Other” non-White ethnicities (ONS, 2023h). Over a fifth of the population have poor health, and a fifth are disabled (ONS, 2023h).
 
 Greenspace assets include extensive moorland and woodland as well as 36 council recognised parks (CBMDC, 2019). There are sports grounds and facilities, but not all are freely accessible. Limited utilisation data exists, but estimates suggest it is below national and regional averages, with surveys finding those most likely to utilise urban greenspace were ethnic minorities, households without a car, and people with children (CBMDC, 2019).
 
 The council recognise the need to embed greenspace within long-term strategies. Key ambitions include ensuring greenspaces are safe and inclusive, improving health outcomes by prioritising investment for those most in need (CBMDC, 2021).
 
-<br>
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    2.3. Review of current literature
-</div>
-
+### 2.3. Review of current literature
 An increasing body of literature acknowledges the connection between greenspace access and overall health (Jia et al, 2021; Lachowycz and Jones, 2011; McCormick, 2017) and social benefits, including community cohesion (Barbosa et al, 2007). Methodologies vary, but most find deprived communities have the best access whilst utilisation levels are unclear, but perception of quality can limit use (Barbosa et al, 2007; Jones et al, 2009; Kessel et al, 2009; Roe et al, 2016). This quality issue is worse in deprived areas (Gidlow and Ellis, 2011; Mears et al, 2019).
 
 Several Bradford-specific studies exist. Mueller et al (2018) analysed health impacts and determined greenspace promotes an active lifestyle, and helps mitigate pollution, noise, and heat effects. McEachan et al (2018) demonstrated the positive impact greenspace had on children, but this impact differed by ethnicity, and perceived quality of greenspace was more important than quantity. Perception has also been linked to biodiversity and facilities (Wood et al, 2018).
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    3. Research question
-</div>
-
+## 3. Research question
 No literature reviewed analyses the dimensions of deprivation. This study aims to investigate whether there is a statistically significant relationship between greenspace access and each dimension of the 2021 UK Census deprivation measure. The null hypothesis is that there is not a statistically significant relationship present.
 
 The remainder of this notebook will be structured as follows: Section 4 explains the datasets used; Section 5 outlines data wrangling processes preparing for analysis; Section 6 presents visual analyses and statistical descriptors of the data; Section 7 includes analysis and results of the OLS regression, Moran’s I and LISA cluster evaluation, and subsequent GWR model; Section 8 discusses findings, how this could influence policy, and further opportunities to improve this study; Section 9 draws conclusions from the findings.
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    4. Data
-</div>
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    4.1. Import libraries
-</div>
-
+## 4. Data
+### 4.1. Import libraries
 
 ```python
 # Set number of threads to recommended 7 to avoid errors in code during visualisation phase
@@ -97,23 +68,13 @@ import numpy as np
 from scipy.stats import probplot
 import scipy.stats as stats
 ```
+  
 
-    C:\Users\jessa\AppData\Roaming\Python\Python311\site-packages\spaghetti\network.py:40: FutureWarning: The next major release of pysal/spaghetti (2.0.0) will drop support for all ``libpysal.cg`` geometries. This change is a first step in refactoring ``spaghetti`` that is expected to result in dramatically reduced runtimes for network instantiation and operations. Users currently requiring network and point pattern input as ``libpysal.cg`` geometries should prepare for this simply by converting to ``shapely`` geometries.
-      warnings.warn(dep_msg, FutureWarning, stacklevel=1)
-    
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    4.2. Import each datafile
-</div>
-
+### 4.2. Import each datafile
 **Links to datafiles are located in the appendix to this notebook and can be downloaded and saved locally using the links provided.**
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    4.2.1. Output Areas (OAs)
-</div>
-
+#### 4.2.1. Output Areas (OAs)
 OAs are the lowest census geography level, containing 40 to 250 households (ONS, 2021), enabling more accurate nearest greenspace measurements, and capturing localised differences in deprivation. Polygons and population weighted centroids (PWCs) are available from the ONS (2023a, 2023b). PWCs are used to measure distance to greenspace as it captures the nearest greenspace for most households. Polygons are aggregated to Bradford LAD level using the ONS (2023c) lookup. This is necessary to reduce the OA PWCs and greenspace to those within Bradford LAD.
-
 
 ```python
 # OA polygons (BFC: Full resolution - clipped to the coastline (Mean High Water mark)) (ONS, 2023a)
@@ -132,14 +93,8 @@ OA_lookup = pd.read_csv('Data/Output_Area_Lookup_in_England_and_Wales_v3.csv')
 ### This is not relevant to, nor will it affect, this study as these columns/rows will not be used.
 ```
 
-    C:\Users\jessa\AppData\Local\Temp\ipykernel_18584\256200225.py:2: DtypeWarning: Columns (3,6,9) have mixed types. Specify dtype option on import or set low_memory=False.
-      OA_lookup = pd.read_csv('Data/Output_Area_Lookup_in_England_and_Wales_v3.csv')
-    
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    4.2.2. Greenspace
-</div>
-
+#### 4.2.2. Greenspace
 Greenspace data (OS, 2023) include site (polygon) and access (point) data. However, not all sites have access data, hence only sites are used to ensure all eligible greenspace is captured. Distance from the PWC to nearest greenspace will be calculated using these polygons. Data includes parks, gardens, sports facilities, and religious grounds, but does not include forests, woodland, moorland or canal and river paths (OS, 2023).
 
 
@@ -148,10 +103,7 @@ Greenspace data (OS, 2023) include site (polygon) and access (point) data. Howev
 GB_greenspace_site = gpd.read_file('Data/OS Open Greenspace (ESRI Shape File) GB/data/GB_GreenspaceSite.shp')
 ```
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    4.2.3. Independent variables
-</div>
-
+#### 4.2.3. Independent variables
 Each deprivation dimension (education, employment, health and disability, and housing) can be obtained via custom ONS queries (ONS, 2023d; ONS, 2023e; ONS, 2023f; ONS, 2023g). These queries include only Bradford LAD OAs. Each file contains the number of households that are deprived or not deprived, from which percentage of households deprived in each dimension is calculated (Section 5.4.) creating the independent variables for regression modelling.
 
 
@@ -171,14 +123,8 @@ HHD_dep_health_raw = pd.read_csv('Data/2021 Census Data/Household deprived in th
 HHD_dep_housing_raw = pd.read_csv('Data/2021 Census Data/Household deprived in the housing dimension.csv')
 ```
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    5. Data wrangling
-</div>
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    5.1. OAs
-</div>
-
+## 5. Data wrangling
+### 5.1. OAs
 Only Bradford LAD OAs are needed. The OA lookup and geometry dataframes can be merged, retaining only Bradford as identified by the LAD22NM column. There are 1,575 OAs within Bradford LAD.
 
 
@@ -201,8 +147,7 @@ len(Bradford_OA_lookup)
 
 
 
-
-    1575
+ 1575
 
 
 
@@ -219,8 +164,9 @@ print(len(Bradford_OA_polygons))
 print(len(Bradford_OA_polygons) == len(Bradford_OA_lookup))
 ```
 
-    1575
-    True
+1575
+
+True
     
 
 
@@ -236,8 +182,9 @@ print(len(Bradford_OA_PWC))
 print(len(Bradford_OA_PWC) == len(Bradford_OA_lookup))
 ```
 
-    1575
-    True
+1575
+
+True
     
 
 
@@ -252,16 +199,10 @@ Bradford_OA_polygons = Bradford_OA_polygons_tidy.set_geometry('geometry').rename
 Bradford_OA_PWC = Bradford_OA_PWC_tidy.set_geometry('geometry').rename_geometry('PWC')
 ```
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    5.2. Greenspace
-</div>
-
+### 5.2. Greenspace
 Only greenspace within Bradford LAD is required. A Bradford LAD polygon is created to spatially match the greenspace, retaining only sites within Bradford LAD.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    5.2.1. Clean greenspace dataframe
-</div>
-
+#### 5.2.1. Clean greenspace dataframe
 Some types of greenspaces are arguably not for recreation (e.g. cemetery) and some are not always free to the public (e.g. golf course). To ensure this analysis includes only freely accessible greenspace for recreational use, types are reduced to 'play space', 'playing field' and 'public park or garden'.
 
 
@@ -282,20 +223,20 @@ GB_greenspace_site_trim.Type.value_counts()
 
 
 
+| Type                                    |          |
+|:---------------------------------------:|:--------:|
+| Play Space                              | 42972    |
+| Religious Grounds                       | 22229    |
+| Playing Field                           | 21377    |
+| Other Sports Facility                   | 15073    |
+| Allotments Or Community Growing Spaces  | 13002    |
+| Public Park Or Garden                   | 11982    |
+| Cemetery                                | 7559     |
+| Tennis Court                            | 6632     |
+| Bowling Green                           | 6589     |
+| Golf Course                             | 3000     |
 
-    Type
-    Play Space                                42972
-    Religious Grounds                         22229
-    Playing Field                             21377
-    Other Sports Facility                     15073
-    Allotments Or Community Growing Spaces    13002
-    Public Park Or Garden                     11982
-    Cemetery                                   7559
-    Tennis Court                               6632
-    Bowling Green                              6589
-    Golf Course                                3000
-    Name: count, dtype: int64
-
+Name: count, dtype: int64
 
 
 
@@ -305,10 +246,7 @@ GB_greenspace_site_filtered = GB_greenspace_site_trim.loc[GB_greenspace_site_tri
                                                           isin(['Play Space','Playing Field','Public Park Or Garden'])]
 ```
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    5.2.2. Greenspace within Bradford LAD
-</div>
-
+#### 5.2.2. Greenspace within Bradford LAD
 Aggregating OA polygons to a single polygon and spatially matching to the greenspace dataframe isolates greenspace within Bradford LAD. This will be used to calculate the dependent variable for the regression analysis.
 
 
@@ -349,10 +287,7 @@ Bradford_greenspace_site = Bradford_greenspace_site.drop(['index_right'], axis=1
 len(Bradford_greenspace_site)
 ```
 
-
-
-
-    436
+436
 
 
 
@@ -363,14 +298,12 @@ print(Bradford_greenspace_site['Greenspace_ID'].nunique())
 print(len(Bradford_greenspace_site) == Bradford_greenspace_site['Greenspace_ID'].nunique())
 ```
 
-    436
-    True
+436
+
+True
     
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    5.3. Dependent variable
-</div>
-
+#### 5.3. Dependent variable
 The dependent variable is the distance between the OA PWC and nearest greenspace polygon calculated using the Euclidian distance and given in metres.
 
 
@@ -390,8 +323,9 @@ print(len(nearest_greenspace))
 print(len(nearest_greenspace) == len(Bradford_OA_lookup))
 ```
 
-    1599
-    False
+1599
+
+False
     
 
 The information above shows there are some duplicated rows. This is confirmed by checking the number of unique OA21CDs which should be 1,575.
@@ -403,8 +337,9 @@ print(nearest_greenspace['OA21CD'].nunique())
 print(nearest_greenspace['OA21CD'].nunique() == len(Bradford_OA_lookup))
 ```
 
-    1575
-    True
+1575
+
+True
     
 
 Duplicates are caused by the same greenspace being allocated different 'Types' with unique IDs. These duplicates are removed, keeping the first record irrespective of 'Type' as no analysis is to be conducted on this.
@@ -418,22 +353,6 @@ duplicated_rows.head(6)
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -506,8 +425,9 @@ print(len(unique_nearest_greenspace))
 print(len(unique_nearest_greenspace) == len(Bradford_OA_lookup))
 ```
 
-    1575
-    True
+1575
+
+True
     
 
 The 'Bradford_greenspace_site' dataframe created in 5.2. must also be updated to ensure a consistent view of greenspace.
@@ -524,10 +444,7 @@ unique_Greenspace_IDs = unique_nearest_greenspace[['Greenspace_ID']].drop_duplic
 Bradford_greenspace_site_unique = Bradford_greenspace_site.merge(unique_Greenspace_IDs, how='right', on='Greenspace_ID')
 ```
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    5.4. Independent variables
-</div>
-
+### 5.4. Independent variables
 Deprivation data needs to be pivoted to create columns of the datapoints by OA and converting these into percentages. This is achieved using a function to repeat the process for each dimension. Resulting dataframes are merged into a final dataframe containing all four independent variables.
 
 
@@ -596,7 +513,7 @@ len(HHD_dep_education) == len(HHD_dep_employment) == len(HHD_dep_health) == len(
 
 
 
-    True
+True
 
 
 
@@ -617,14 +534,12 @@ print(len(Ind_vars))
 print(len(Ind_vars) == len(Bradford_OA_lookup))
 ```
 
-    1575
-    True
+1575
+
+True
     
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    5.5. Final dataframe for regression analysis
-</div>
-
+### 5.5. Final dataframe for regression analysis
 A dataframe containing the dependent and independent variables, OA code and polygons is required for the regression models and spatial analysis.
 
 
@@ -642,19 +557,12 @@ final_df = final_df.set_geometry('Polygon')
 
 Visual checks of each dataframe can be found in Appendix 1.
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    6. Visualisation and Statistics
-</div>
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    6.1. OAs
-</div>
+## 6. Visualisation and Statistics
+### 6.1. OAs
 
 Figure 6.1.1. shows OA boundaries and PWCs within Bradford LAD. PWCs locations can vary from near the edge to the centre of OAs.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.1.1. Map of OA polygons and population-weighted centroids within the Bradford LAD
-</div>
+#### Figure 6.1.1. Map of OA polygons and population-weighted centroids within the Bradford LAD
 
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023a; ONS, 2023b
@@ -681,20 +589,14 @@ plt.show()
 
 
     
-![png](output_81_0.png)
+![png](outputs-images/output_81_0.png)
     
 
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    6.2. Greenspace
-</div>
-
+### 6.2. Greenspace
 Figure 6.2.1. shows greenspace by type. However, as detailed in Section 5.3., duplicates were removed by keeping first instances of duplicated cases hence counts in figure 6.2.2. are skewed. In most instances, 'playing field' was retained, and so counts are higher for this type. This does not impact subsequent analysis as type does not feature in the regression modelling.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.2.1. Map of greenspace within the Bradford LAD
-</div>
-
+#### Figure 6.2.1. Map of greenspace within the Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: OS, 2023
 </div>
@@ -723,14 +625,11 @@ plt.show()
 
 
     
-![png](output_85_0.png)
+![png](outputs-images/output_85_0.png)
     
 
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.2.2. Count of greenspace by type within the Bradford LAD
-</div>
-
+#### Figure 6.2.2. Count of greenspace by type within the Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: OS, 2023; Author's calculations
 </div>
@@ -771,14 +670,11 @@ plt.show()
 
 
     
-![png](output_87_0.png)
+![png](outputs-images/output_87_0.png)
     
 
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    6.3. Deprivation
-</div>
-
+### 6.3. Deprivation
 
 ```python
 def create_deprivation_choropleth(variable, final_df):
@@ -828,10 +724,7 @@ def create_deprivation_choropleth(variable, final_df):
 
 Figure 6.3.1. shows areas of high education deprivation in the southeast and west. Lowest levels are in rural, affluent areas in the southwest and north.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.3.1. Percentage of households deprived in the education dimension by OA in Bradford LAD
-</div>
-
+#### Figure 6.3.1. Percentage of households deprived in the education dimension by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023d; Author's calculations
 </div>
@@ -844,16 +737,13 @@ create_deprivation_choropleth('HHD_dep_education_PC', final_df)
 
 
     
-![png](output_92_0.png)
+![png](outputs-images/output_92_0.png)
     
 
 
 Figure 6.3.2. shows similar spatial employment deprivation patterns to education. The range of employment deprivation is smaller though, from 0% to 54.7%.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.3.2. Percentage of households deprived in the employment dimension by OA in Bradford LAD
-</div>
-
+#### Figure 6.3.2. Percentage of households deprived in the employment dimension by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023e; Author's calculations
 </div>
@@ -866,16 +756,13 @@ create_deprivation_choropleth('HHD_dep_employment_PC', final_df)
 
 
     
-![png](output_95_0.png)
+![png](outputs-images/output_95_0.png)
     
 
 
 Figure 6.3.3. shows health deprivation levels are higher and widely spread. As health deprivation includes poor health and disability, levels may be higher due to factors including elderly populations, as well as affluence-associated poor health.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.3.3. Percentage of households deprived in the health dimension by OA in Bradford LAD
-</div>
-
+#### Figure 6.3.3. Percentage of households deprived in the health dimension by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023f; Author's calculations
 </div>
@@ -888,16 +775,13 @@ create_deprivation_choropleth('HHD_dep_health_PC', final_df)
 
 
     
-![png](output_98_0.png)
+![png](outputs-images/output_98_0.png)
     
 
 
 Contrastingly, figure 6.3.4. shows housing deprivation is largely isolated to Bradford city and around Keighley. Most OAs have less than 10% housing deprivation.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.3.4. Percentage of households deprived in the housing dimension by OA in Bradford LAD
-</div>
-
+#### Figure 6.3.4. Percentage of households deprived in the housing dimension by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023g; Author's calculations
 </div>
@@ -910,7 +794,7 @@ create_deprivation_choropleth('HHD_dep_housing_PC', final_df)
 
 
     
-![png](output_101_0.png)
+![png](outputs-images/output_101_0.png)
     
 
 
@@ -918,10 +802,7 @@ Figure 6.3.5. and 6.3.6. provide key summary statistics. Education deprivation h
 
 Education, health, and housing have outliers at the higher end, recording maximum values around 65-68%. However, average deprivation levels vary across each dimension, with housing having the lowest average (11.0%) and health the highest (35.4%). There is no consistent distribution or spatial pattern to deprivation across all four dimensions.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.3.5. Boxplots of the percentage of households deprived in the given dimension by OA in Bradford LAD
-</div>
-
+#### Figure 6.3.5. Boxplots of the percentage of households deprived in the given dimension by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023d; ONS, 2023e; ONS, 2023f; ONS, 2023g; Author's calculations
 </div>
@@ -966,14 +847,11 @@ plt.show()
 
 
     
-![png](output_104_0.png)
+![png](outputs-images/output_104_0.png)
     
 
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.3.6. Deprivation statistics in the given dimension by OA in Bradford LAD
-</div>
-
+#### Figure 6.3.6. Deprivation statistics in the given dimension by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023d; ONS, 2023e; ONS, 2023f; ONS, 2023g; Author's calculations
 </div>
@@ -987,20 +865,7 @@ Ind_vars_boxplot.describe()
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1074,16 +939,10 @@ Ind_vars_boxplot.describe()
 
 
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    6.4. Distance to nearest greenspace
-</div>
-
+### 6.4. Distance to nearest greenspace
 Figure 6.4.1. shows distances to greenspace are greater in rural areas to the north and west. These areas are more affluent, with lower levels of deprivation (figures 6.3.1.-6.3.4). More deprived OAs have lower distances.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.4.1. Distance to nearest greenspace (metres) by OA in Bradford LAD
-</div>
-
+#### Figure 6.4.1. Distance to nearest greenspace (metres) by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023b; OS, 2023; Author's calculations
 </div>
@@ -1135,16 +994,13 @@ create_distance_choropleth(final_df)
 
 
     
-![png](output_111_0.png)
+![png](outputs-images/output_111_0.png)
     
 
 
 Figure 6.4.2. shows outliers at larger distances, confirming the distance variable is right skewed. Meanwhile, figure 6.4.3. shows the range, from 0m to over 2,000m. OAs with 0m distance are a result of PWCs falling within greenspace boundaries. On average, greenspace is around 275m from PWCs, which is below the previous UK government target of 300m (Houlden et al, 2019).
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.4.2. Boxplot of distance to nearest greenspace (metres) by OA in Bradford LAD
-</div>
-
+#### Figure 6.4.2. Boxplot of distance to nearest greenspace (metres) by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023b; OS, 2023; Author's calculations
 </div>
@@ -1176,14 +1032,11 @@ plt.show()
 
 
     
-![png](output_114_0.png)
+![png](outputs-images/output_114_0.png)
     
 
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.4.3. Distance to nearest greenspace (metres) statistics by OA in Bradford LAD
-</div>
-
+#### Figure 6.4.3. Distance to nearest greenspace (metres) statistics by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023b; OS, 2023; Author's calculations
 </div>
@@ -1197,20 +1050,7 @@ unique_nearest_greenspace.describe()
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1257,16 +1097,10 @@ unique_nearest_greenspace.describe()
 
 
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    6.5. Dependent and independent variables
-</div>
-
+### 6.5. Dependent and independent variables
 Figure 6.5.1. shows scatter plots and regression lines between the dependent and independent variables. There is one high distance outlier visible across all four dimensions, and all present a negative correlation with distance to nearest greenspace.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 6.5.1. Scatterplots of distance to nearest greenspace (metres) and household deprivation dimensions, by OA in Bradford LAD
-</div>
-
+#### Figure 6.5.1. Scatterplots of distance to nearest greenspace (metres) and household deprivation dimensions, by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023b; ONS, 2023d; ONS, 2023e; ONS, 2023f; ONS, 2023g; OS, 2023; Author's calculations
 </div>
@@ -1344,24 +1178,15 @@ plt.show()
 
 
     
-![png](output_120_0.png)
+![png](outputs-images/output_120_0.png)
     
 
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    7. Analysis and results
-</div>
-
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    7.1. OLS Regression
-</div>
-
+## 7. Analysis and results
+### 7.1. OLS Regression
 Checks for collinearity are conducted using a correlation matrix (figure 7.1.1.). Deprivation variables have a positive correlation with one another, particularly employment and health. Figure 7.1.2. is a coefficient matrix which confirms that the employment and health dimensions have a coefficient of 0.68 which is high and could indicate collinearity. People with poorer health or disabilities are more likely to be out of work (ONS, 2023i) and so, coupled with the high coefficient, it has been determined that collinearity is present between these variables.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.1.1. Correlation matrix of independent and dependent variables by OA in Bradford LAD
-</div>
-
+#### Figure 7.1.1. Correlation matrix of independent and dependent variables by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023b; ONS, 2023d; ONS, 2023e; ONS, 2023f; ONS, 2023g; OS, 2023; Author's calculations
 </div>
@@ -1374,14 +1199,11 @@ output = pd.plotting.scatter_matrix(final_df, alpha=0.2, figsize=(12, 12), diago
 
 
     
-![png](output_125_0.png)
+![png](outputs-images/output_125_0.png)
     
 
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.1.2. Coefficient matrix of independent and dependent variables by OA in Bradford LAD
-</div>
-
+#### Figure 7.1.2. Coefficient matrix of independent and dependent variables by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023b; ONS, 2023d; ONS, 2023e; ONS, 2023f; ONS, 2023g; OS, 2023; Author's calculations
 </div>
@@ -1395,20 +1217,7 @@ final_df.corr(numeric_only=True)
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1467,10 +1276,7 @@ final_df.corr(numeric_only=True)
 
 
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Addressing collinearity
-</div>
-
+#### Addressing collinearity
 Figure 7.1.3. shows the p-value for employment is highest, meaning it is the least statistically significant variable, so employment is removed to eliminate the identified collinearity.
 
 
@@ -1497,10 +1303,7 @@ mod = sm.OLS(y, x1)
 results = mod.fit()
 ```
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.1.3. Results of OLS model including all four deprivation dimensions
-</div>
-
+#### Figure 7.1.3. Results of OLS model including all four deprivation dimensions
 <div style="color: #808080; margin-top: 5px">
     Data Source: ONS, 2023b; ONS, 2023d; ONS, 2023e; ONS, 2023f; ONS, 2023g; OS, 2023; Author's calculations
 </div>
@@ -1541,10 +1344,7 @@ print(results.summary())
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
     
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    OLS regression model
-</div>
-
+#### OLS regression model
 The model includes education, health, and housing deprivation dimensions. Figure 7.1.4. shows that all three are statistically significant at the 95% confidence level. The model has an R-squared value of 0.044, meaning only 4.4% of variance is accounted for. Further analysis of the residuals is warranted.
 
 
@@ -1638,10 +1438,7 @@ final_df = pd.merge(final_df, residuals_data, on='OA21CD')
 
 Figure 7.1.5. illustrates the relationship between the observed distances and fitted values from the model. There is an outlier – the largest distance in the observed values is no longer the largest in the fitted values – and fitted values have a much smaller range with the largest distance being closer to 325m.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.1.5. Observed vs Fitted Values for the OLS regression model
-</div>
-
+#### Figure 7.1.5. Observed vs Fitted Values for the OLS regression model
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -1676,16 +1473,13 @@ plt.show()
 
 
     
-![png](output_145_0.png)
+![png](outputs-images/output_145_0.png)
     
 
 
 Figure 7.1.6. shows the variance in the residuals. No distinct relationship is visible with positive and negative residuals ranging from around -250 to +250, across all fitted distance values. This suggests the assumption that the relationship is linear is reasonable, and the variance of the error terms are equal. However, only larger positive residuals exist, meaning the model is not working as well for largest distances in the observed values.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.1.6. Residuals vs Fitted Values for the OLS regression model
-</div>
-
+#### Figure 7.1.6. Residuals vs Fitted Values for the OLS regression model
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -1715,16 +1509,13 @@ plt.show()
 
 
     
-![png](output_148_0.png)
+![png](outputs-images/output_148_0.png)
     
 
 
 To confirm this, figure 7.1.6. shows a histogram of the residuals, highlighting a normal distribution centred around 0, with a slight right skew.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.1.7. Histogram of residuals for the OLS regression model
-</div>
-
+#### Figure 7.1.7. Histogram of residuals for the OLS regression model
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -1752,16 +1543,13 @@ plt.show()
 
 
     
-![png](output_151_0.png)
+![png](outputs-images/output_151_0.png)
     
 
 
 Lastly, a Q-Q plot is used to confirm the presence of outliers. One extreme outlier was visible in the previous charts, but a Q-Q plot allows for confirmation of other outliers closer to the rest of the data points. Figure 7.1.8. confirms that there are outliers in the residuals at both the top and bottom end.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.1.8. Q-Q Plot
-</div>
-
+#### Figure 7.1.8. Q-Q Plot
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -1788,14 +1576,11 @@ plt.show()
 
 
     
-![png](output_154_0.png)
+![png](outputs-images/output_154_0.png)
     
 
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    7.2. Moran's I
-</div>
-
+### 7.2. Moran's I
 Moran's I is used to detect high and low values concentrated spatially, and the spatial relationship between neighbours is random if zero association is found (Paez and Scott, 2004). Queens weights are used, meaning any OA bordering the given OA is included.
 
 The I value is 0.46 and the p-value is 0.001. These are positive and significant respectively, implying distance to nearest greenspace is spatially correlated - higher values and lower values cluster spatially. Figure 7.2.1. shows this on a scatterplot.
@@ -1821,14 +1606,12 @@ print(f'I value: {mi.I}')
 print(f'P value: {mi.p_sim}')
 ```
 
-    I value: 0.45882055605281585
-    P value: 0.001
+|    I value    | 0.45882055605281585    |
+|:-------------:|:----------------------:|
+|    P value    | 0.001                  |
     
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.2.1. Moran Scatterplot
-</div>
-
+#### Figure 7.2.1. Moran Scatterplot
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -1850,7 +1633,7 @@ plt.show()
 
 
     
-![png](output_161_0.png)
+![png](output-images/output_161_0.png)
     
 
 
@@ -1865,7 +1648,7 @@ final_df['Distance'].max()
 
 
 
-    2090.9863451326555
+2090.9863451326555
 
 
 
@@ -1878,7 +1661,7 @@ final_df[final_df['Distance'] < final_df['Distance'].max()]['Distance'].max()
 
 
 
-    1268.1070267044204
+1268.1070267044204
 
 
 
@@ -1900,8 +1683,9 @@ print(final_df['Distance_Clean'].max())
 print(final_df['Distance_Clean'].max() == final_df[final_df['Distance'] < final_df['Distance'].max()]['Distance'].max())
 ```
 
-    1268.1070267044204
-    True
+1268.1070267044204
+
+True
     
 
 Moran's I is re-calculated and the I value is now 0.47, and the p-value remains 0.001. These results are still positive and significant respectively, so distance to nearest greenspace remains spatially correlated. Figure 7.2.2. shows the outlier is removed.
@@ -1921,14 +1705,12 @@ print(f'I value: {mi_adj.I}')
 print(f'P value: {mi_adj.p_sim}')
 ```
 
-    I value: 0.47144858850487537
-    P value: 0.001
+|    I value    | 0.47144858850487537    |
+|:-------------:|:----------------------:|
+|    P value    | 0.001                  |
     
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.2.2. Moran Scatterplot (Adjusted)
-</div>
-
+#### Figure 7.2.2. Moran Scatterplot (Adjusted)
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -1950,20 +1732,14 @@ plt.show()
 
 
     
-![png](output_171_0.png)
+![png](output-images/output_171_0.png)
     
 
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    7.3. LISA Clusters
-</div>
-
+### 7.3. LISA Clusters
 Spatial association will be tested and visualised using Local Indicators of Spatial Association (LISA) clusters. This will be conducted on the dependent variable and residuals from Section 7.1.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Distance
-</div>
-
+#### Distance
 Significance is calculated to the 95% level and a LISA cluster assigned. Figure 7.3.1. shows each LISA cluster, with clear spatial patterns emerging. To the north and south, and north of Bradford city centre, there are High-High clusters, meaning these OAs have high distances to the nearest greenspace as do their neighbouring OAs. Meanwhile, Low-Low clusters can be observed around the city of Bradford suburbs and Keighley town centre.
 
 
@@ -2000,10 +1776,7 @@ final_df['LISA_Distance'] = np.select(
 )
 ```
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.3.1. Map of distance LISA Clusters by OA in Bradford LAD
-</div>
-
+#### Figure 7.3.1. Map of distance LISA Clusters by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -2031,14 +1804,11 @@ plt.show()
 
 
     
-![png](output_179_0.png)
+![png](output-images/output_179_0.png)
     
 
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Residuals
-</div>
-
+#### Residuals
 Figure 7.3.2. shows similar spatial patterns for the residual LISA clusters. There is one noticeable OA to the north that is Low-High - this OA has a small residual error compared to neighbouring OAs – and fewer Low-High clusters in central areas. Despite these differences, spatial association is still present across much of the district.
 
 
@@ -2075,10 +1845,7 @@ final_df['LISA_Residuals'] = np.select(                                         
 )
 ```
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.3.2. Map of residual LISA Clusters by OA in Bradford LAD
-</div>
-
+#### Figure 7.3.2. Map of residual LISA Clusters by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -2111,16 +1878,13 @@ plt.show()
 
 
     
-![png](output_185_0.png)
+![png](output-images/output_185_0.png)
     
 
 
 Results from the Moran's I and LISA cluster analysis confirms a Geographically Weighted Regression (GWR) model is required to ensure spatial association is considered.
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 18px; font-weight: bold;">
-    7.4. GWR model
-</div>
-
+### 7.4. GWR model
 Bandwidth is the optimal number of datapoints that will be included in each local regression model. The bandwidth calculated is 54.0 – the 54 nearest datapoints of the 1,575 OAs in the dataset will be included, hence each local model will be using roughly 3% of the available data.
 
 
@@ -2157,7 +1921,7 @@ bw = gwr_selector.search()
 print(bw)
 ```
 
-    54.0
+54.0
     
 
 The GWR model (figure 7.4.1) includes global regression results reflecting the OLS model (section 7.1), whilst GWR results give details of the local models. The R-squared value is 0.458 (45.8% of variance is accounted for) which is higher than the global regression model.
@@ -2171,10 +1935,7 @@ gwr = GWR(g_coords, g_y, g_X, bw)
 gwr_results = gwr.fit()
 ```
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.4.1. Results of GWR model
-</div>
-
+#### Figure 7.4.1. Results of GWR model
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -2362,10 +2123,7 @@ def viz_coefficients_t_value(final_df, Coeff_variable, Sig_df, Sig_variable):
 
 Figure 7.4.2. shows statistically significant spatial patterns for education deprivation, with clusters of negative relationships in the north, west and central areas. This means that in these areas, as education deprivation increases, the distance to the nearest greenspace decreases. By contrast, clusters of positive relationships can be seen in the northwest and southeast.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.4.2. Map of GWR model results and significance for education deprivation, by OA in the Bradford LAD
-</div>
-
+#### Figure 7.4.2. Map of GWR model results and significance for education deprivation, by OA in the Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -2376,22 +2134,18 @@ Figure 7.4.2. shows statistically significant spatial patterns for education dep
 viz_coefficients_t_value(final_df, 'GWR_Education_Coefficient', GWR_Emp_sig, 'GWR_Education_tvalue_significance')
 ```
 
-    C:\Users\jessa\AppData\Local\Temp\ipykernel_18584\4150065471.py:41: MatplotlibDeprecationWarning: The legendHandles attribute was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use legend_handles instead.
-      coef_legend_elements = coef_plot.get_legend().legendHandles
+
     
 
 
     
-![png](output_206_1.png)
+![png](output-images/output_206_1.png)
     
 
 
 Health deprivation (figure 7.4.3.) displays clusters of negative relationships in the north and Bradford city centre. Positive relationships exist in the northwest, south and suburbs north of Bradford city centre. This contrasts education deprivation but is not unexpected given higher levels of health deprivation shown in figure 6.3.3. across the district and that the spatial pattern of this varied compared to other deprivation dimensions.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.4.3. Map of GWR model results and significance for health deprivation, by OA in the Bradford LAD
-</div>
-
+#### Figure 7.4.3. Map of GWR model results and significance for health deprivation, by OA in the Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -2402,22 +2156,18 @@ Health deprivation (figure 7.4.3.) displays clusters of negative relationships i
 viz_coefficients_t_value(final_df, 'GWR_Health_Coefficient', GWR_Emp_sig, 'GWR_Health_tvalue_significance')
 ```
 
-    C:\Users\jessa\AppData\Local\Temp\ipykernel_18584\4150065471.py:41: MatplotlibDeprecationWarning: The legendHandles attribute was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use legend_handles instead.
-      coef_legend_elements = coef_plot.get_legend().legendHandles
+
     
 
 
     
-![png](output_209_1.png)
+![png](output-images/output_209_1.png)
     
 
 
 Figure 7.4.4. shows housing deprivation has large negative clusters in the north and south, and Bradford city centre. There are fewer statistically significant positive relationships across the district, with a small number in the north and east.
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.4.4. Map of GWR model results and significance for housing deprivation, by OA in the Bradford LAD
-</div>
-
+#### Figure 7.4.4. Map of GWR model results and significance for housing deprivation, by OA in the Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -2428,13 +2178,12 @@ Figure 7.4.4. shows housing deprivation has large negative clusters in the north
 viz_coefficients_t_value(final_df, 'GWR_Housing_Coefficient', GWR_Emp_sig, 'GWR_Housing_tvalue_significance')
 ```
 
-    C:\Users\jessa\AppData\Local\Temp\ipykernel_18584\4150065471.py:41: MatplotlibDeprecationWarning: The legendHandles attribute was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use legend_handles instead.
-      coef_legend_elements = coef_plot.get_legend().legendHandles
+
     
 
 
     
-![png](output_212_1.png)
+![png](output-images/output_212_1.png)
     
 
 
@@ -2481,10 +2230,7 @@ final_df['LISA_GWR_Residuals'] = np.select(
 )
 ```
 
-<div style="color: #2F5496; font-size: 14px; font-weight: bold;">
-    Figure 7.4.5. Map of GWR residual LISA Clusters by OA in Bradford LAD
-</div>
-
+#### Figure 7.4.5. Map of GWR residual LISA Clusters by OA in Bradford LAD
 <div style="color: #808080; margin-top: 5px">
     Data Source: Author's calculations
 </div>
@@ -2517,7 +2263,7 @@ plt.show()
 
 
     
-![png](output_219_0.png)
+![png](output-images/output_219_0.png)
     
 
 
@@ -2536,14 +2282,12 @@ print(f'I value: {mi.I}')
 print(f'P value: {mi.p_sim}')
 ```
 
-    I value: 0.23403007956028024
-    P value: 0.001
+| I value | 0.23403007956028024 |
+|:------:|:-------:|
+| P value | 0.001 |
     
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    8. Discussion
-</div>
-
+## 8. Discussion
 Results showed deprivation and distance to greenspace are negatively correlated, reflecting much of the literature, and rejects the null hypothesis posed. However, the relationship differs by dimension and spatially. Any policy or intervention needs to consider this.
 
 Key differentiators of this study are using deprivation dimensions and OA geographies, attempting to consider distance at a local level appropriate to the Natural England (2023) targets. However, there are limitations and opportunities for improvement.
@@ -2558,20 +2302,14 @@ Despite these limitations, actions could result from the findings. Deprivation d
 
 Finally, two areas of future research are identified. Firstly, including a broader set of demographic measures beyond deprivation. Age and ethnicity are key, as shown in the literature, but no research addressed in this study has considered variables such as profession which could have an impact on how and when someone accesses greenspace. Secondly, there is opportunity to reflect on the impact of new greenspace, or improvements to current greenspace, to learn and adapt plans. CBMDC (2021) have clear goals they wish to achieve, but understanding the effectiveness of interventions is needed to ensure investments add value. Deprivation can be a relatively slow to change measure. Further studies analysing more reactive variables may enable a comprehensive review of what works in different communities.
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    9. Conclusion
-</div>
-
+## 9. Conclusion
 This study sought to build on previous research into the relationship between distance to greenspace and deprivation by splitting deprivation into the component dimensions. The findings mirror the literature that there is a statistically significant, negative correlation between distance to greenspace and deprivation, but the use of dimensions and understanding this spatially has shown that the results vary by area. Policy implications are that decisions should be on a local scale, and interventions may vary depending on the community and their needs.
 
 However, this is not only tied to deprivation and this study has argued that a more holistic view of demographics within communities is required, and consideration for the type of greenspace and its uses. This will allow planners to develop better suited solutions to improve community health and wellbeing, with greenspace that meets the needs and wants of the communities they serve.
 
  
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    References
-</div>
-
+## References
 Barbosa, O., Tratalos. J.A., Armsworth, P.R., Davies, R.G., Fuller, R.A., Johnson, P. and Gaston, K.J. 2007. Who benefits from access to green space? A case study from Sheffield, UK. *Landscape and Urban Planning*. **83**(2-3), pp. 187-195.
 
 City of Bradford Metropolitan District Council (CBMDC). 2019. *Public Health - Joint Strategic Needs Assessment*. [Online]. Bradford: City of Bradford Metropolitan District Council. [Accessed 09 January 2024]. Available from: https://jsna.bradford.gov.uk/
@@ -2634,10 +2372,7 @@ Roe, J., Aspinall, P.A. and Thompson, C.W. 2016. Understanding Relationships bet
 
 Wood, E., Harsant, A., Dallimer, M., Cronin de Chavez, A., McEachan, R.R.C. and Hassall, C. 2018. Not All Green Space Is Created Equal: Biodiversity Predicts Psychological Restorative Benefits From Urban Green Space. *Frontiers in Psychology*. **9**, pp2320.
 
-<div style="color: #2F5496; text-decoration: underline; font-size: 20px; font-weight: bold;">
-    Appendix 1 - Wrangled dataframes
-</div>
-
+## Appendix 1 - Wrangled dataframes
 This appendix contains visual checks of the top five rows of the wrangled dataframes created in section 5.
 
 #### Bradford OA polygons dataframe
@@ -2648,22 +2383,6 @@ Bradford_OA_polygons.head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2719,21 +2438,6 @@ Bradford_OA_PWC.head()
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2783,21 +2487,6 @@ Bradford_greenspace_site_unique.head()
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2852,22 +2541,6 @@ unique_nearest_greenspace.head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2928,22 +2601,6 @@ Ind_vars.head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
