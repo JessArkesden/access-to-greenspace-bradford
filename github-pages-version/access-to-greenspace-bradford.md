@@ -1,4 +1,4 @@
-Click [here](../READ.md) to return to the summary page.
+Click [here](../README.md) to return to the summary page.
 
 ## 1. Introduction
 
