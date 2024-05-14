@@ -408,7 +408,6 @@ duplicated_rows.head(6)
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -935,7 +934,7 @@ Ind_vars_boxplot.describe()
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
 
@@ -1093,7 +1092,7 @@ unique_nearest_greenspace.describe()
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
 
@@ -1272,7 +1271,7 @@ final_df.corr(numeric_only=True)
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
 
@@ -2425,7 +2424,7 @@ Bradford_OA_polygons.head()
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
 
@@ -2474,7 +2473,7 @@ Bradford_OA_PWC.head()
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
 
@@ -2529,7 +2528,7 @@ Bradford_greenspace_site_unique.head()
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
 
@@ -2589,7 +2588,7 @@ unique_nearest_greenspace.head()
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
 
@@ -2655,6 +2654,6 @@ Ind_vars.head()
     </tr>
   </tbody>
 </table>
-</div>
+
 
 
