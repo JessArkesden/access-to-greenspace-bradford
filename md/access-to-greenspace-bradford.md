@@ -589,7 +589,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_81_0.png)
+![png](output-images/output_81_0.png)
     
 
 
@@ -625,7 +625,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_85_0.png)
+![png](output-images/output_85_0.png)
     
 
 
@@ -670,7 +670,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_87_0.png)
+![png](output-images/output_87_0.png)
     
 
 
@@ -737,7 +737,7 @@ create_deprivation_choropleth('HHD_dep_education_PC', final_df)
 
 
     
-![png](outputs-images/output_92_0.png)
+![png](output-images/output_92_0.png)
     
 
 
@@ -756,7 +756,7 @@ create_deprivation_choropleth('HHD_dep_employment_PC', final_df)
 
 
     
-![png](outputs-images/output_95_0.png)
+![png](output-images/output_95_0.png)
     
 
 
@@ -775,7 +775,7 @@ create_deprivation_choropleth('HHD_dep_health_PC', final_df)
 
 
     
-![png](outputs-images/output_98_0.png)
+![png](output-images/output_98_0.png)
     
 
 
@@ -794,7 +794,7 @@ create_deprivation_choropleth('HHD_dep_housing_PC', final_df)
 
 
     
-![png](outputs-images/output_101_0.png)
+![png](output-images/output_101_0.png)
     
 
 
@@ -847,7 +847,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_104_0.png)
+![png](output-images/output_104_0.png)
     
 
 
@@ -994,7 +994,7 @@ create_distance_choropleth(final_df)
 
 
     
-![png](outputs-images/output_111_0.png)
+![png](output-images/output_111_0.png)
     
 
 
@@ -1032,7 +1032,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_114_0.png)
+![png](output-images/output_114_0.png)
     
 
 
@@ -1178,7 +1178,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_120_0.png)
+![png](output-images/output_120_0.png)
     
 
 
@@ -1199,7 +1199,7 @@ output = pd.plotting.scatter_matrix(final_df, alpha=0.2, figsize=(12, 12), diago
 
 
     
-![png](outputs-images/output_125_0.png)
+![png](output-images/output_125_0.png)
     
 
 
@@ -1473,7 +1473,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_145_0.png)
+![png](output-images/output_145_0.png)
     
 
 
@@ -1509,7 +1509,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_148_0.png)
+![png](output-images/output_148_0.png)
     
 
 
@@ -1543,7 +1543,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_151_0.png)
+![png](output-images/output_151_0.png)
     
 
 
@@ -1576,7 +1576,7 @@ plt.show()
 
 
     
-![png](outputs-images/output_154_0.png)
+![png](output-images/output_154_0.png)
     
 
 
