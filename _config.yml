@@ -1,9 +1,0 @@
-# _config.yml
-
-# Site settings
-title: A spatial analysis of access to greenspace and deprivation in Bradford
-description: Using a GWR model to analyse the relationship between nearest greenspace and dimensions of deprivation by Output Area within the Bradford local authority district
-theme: jekyll-theme-cayman # Change this to the name of the theme you want to use
-
-# Build settings
-markdown: kramdown
