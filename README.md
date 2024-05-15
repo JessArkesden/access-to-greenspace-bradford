@@ -1,4 +1,4 @@
-**The full study can be found [here](markdown-version/access-to-greenspace-bradford.md).**
+**The full study can be found [here](markdown-version/access-to-greenspace-bradford.md) (markdown version).**
 
 ______________________________
 
